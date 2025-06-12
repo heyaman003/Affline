@@ -44,7 +44,6 @@ services:
     environment:
       - POSTGRES_DB=chatwoot
       - POSTGRES_USER=postgres
-      # Please provide your own password.
       - POSTGRES_PASSWORD=strongpassword123
 
   redis:

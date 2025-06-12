@@ -65,8 +65,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE:-affine}
       POSTGRES_INITDB_ARGS: '--data-checksums'
-      # you better set a password for you database
-      # or you may add 'POSTGRES_HOST_AUTH_METHOD=trust' to ignore postgres security policy
       POSTGRES_HOST_AUTH_METHOD: trust
     healthcheck:
       test:
@@ -96,10 +94,10 @@ services:
       CHOKIDAR_USEPOLLING: "true"
       ROLLUP_NO_BINARY_BUILD: "true"
 
-  # Chatwoot services
+
   chatwoot_rails:
     image: chatwoot/chatwoot:latest
-    env_file: chatwoot/.env  # Point to Chatwoot's env file
+    env_file: chatwoot/.env  
     depends_on:
       - chatwoot_postgres
       - chatwoot_redis
@@ -109,11 +107,12 @@ services:
       - NODE_ENV=production
       - RAILS_ENV=production
       - INSTALLATION_ENV=docker
+      - DISABLE_X_FRAME_HEADER=true  
     entrypoint: docker/entrypoints/rails.sh
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     volumes:
       - chatwoot_storage:/app/storage
-    restart: unless-stopped
+    restart: always
 
   chatwoot_sidekiq:
     image: chatwoot/chatwoot:latest
@@ -134,31 +133,33 @@ services:
     image: pgvector/pgvector:pg16
     restart: unless-stopped
     ports:
-      - '127.0.0.1:5433:5432'  # Different port than Affine's postgres
+      - '127.0.0.1:5433:5432'  
     volumes:
       - chatwoot_postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=chatwoot
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=strongpassword123
+      - POSTGRES_DB=chatwoot_production
+      - POSTGRES_USER=chatwoot
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   chatwoot_redis:
     image: redis:alpine
     restart: unless-stopped
-    command: ["sh", "-c", "redis-server --requirepass \"$REDIS_PASSWORD\""]
-    env_file: chatwoot/.env
+    command: redis-server --requirepass Aman1234
     volumes:
       - chatwoot_redis_data:/data
     ports:
-      - '127.0.0.1:6380:6379'  # Different port than Affine's redis
+      - '127.0.0.1:6380:6379'  
+    healthcheck:
+        test: ["CMD", "redis-cli", "-a", "Aman1234", "ping"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
 
 volumes:
-  # Your existing volumes
   storage_data:
   postgres_data:
   redis_data:
-  
-  # Chatwoot specific volumes
   chatwoot_storage:
   chatwoot_postgres_data:
   chatwoot_redis_data:

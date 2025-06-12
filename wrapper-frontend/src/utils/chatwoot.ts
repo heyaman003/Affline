@@ -1,5 +1,4 @@
 export function loadChatwoot(token: string, baseUrl: string) {
-  // Ensure baseUrl doesn't end with a slash
   const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
   
   if (!token || !normalizedBaseUrl) {
@@ -11,10 +10,15 @@ export function loadChatwoot(token: string, baseUrl: string) {
     console.log('Chatwoot already loaded');
     return;
   }
+console.log("the base url is ",normalizedBaseUrl,normalizedBaseUrl.startsWith('http'))
+  const sanitizedBaseUrl = normalizedBaseUrl.includes('0.0.0.0')
+  ? normalizedBaseUrl.replace('0.0.0.0', 'localhost') // or replace with actual hostname
+  : normalizedBaseUrl;
 
-  // Add protocol if missing
-  const fullBaseUrl = normalizedBaseUrl.startsWith('http') 
-    ? normalizedBaseUrl 
+console.log("the base url is ",normalizedBaseUrl,normalizedBaseUrl.startsWith('http'),sanitizedBaseUrl)
+
+  const fullBaseUrl = sanitizedBaseUrl.startsWith('http') 
+    ? sanitizedBaseUrl 
     : `https://${normalizedBaseUrl}`;
 
   (function (d, t) {
@@ -25,7 +29,7 @@ export function loadChatwoot(token: string, baseUrl: string) {
     g.async = true;
     g.onload = () => {
       (window as any).chatwootSDK.run({
-        websiteToken: token,
+        websiteToken:  'x9FcjxafeuyECSr38rhQM92F',
         baseUrl: fullBaseUrl,
       });
     };

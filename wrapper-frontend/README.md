@@ -1,54 +1,51 @@
-# React + TypeScript + Vite
+# Wrapper Frontend Service
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the `wrapper-frontend` service, which is the frontend application for the project.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This service is a Docker container built from the `wrapper-frontend` directory as specified in the main `docker-compose.yml` file.
 
-## Expanding the ESLint configuration
+## Configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   **Ports**: The service exposes port `5173` from the container to port `5173` on the host.
+    ```yaml
+    ports:
+      - "5173:5173"
+    ```
+-   **Volumes**: It mounts the local `wrapper-frontend` directory into the container at `/usr/src/app/frontend`.
+    ```yaml
+    volumes:
+      - ./wrapper-frontend:/usr/src/app/frontend
+      - /usr/src/app/frontend/node_modules
+    ```
+    The second volume definition (`/usr/src/app/frontend/node_modules`) is to ensure that `node_modules` are not overwritten by the host volume mount, allowing Docker to manage them internally.
+-   **Environment Variables**:
+    -   `CHOKIDAR_USEPOLLING: "true"`: Often used in Docker environments to enable polling for file changes, which can be necessary for hot-reloading to work correctly when host file changes aren't propagated directly.
+    -   `ROLLUP_NO_BINARY_BUILD: "true"`: This might be specific to the build process within the frontend project, potentially related to preventing native module compilation issues in a Docker environment.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Running the Service (Standalone)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+To run this service individually without the entire Docker Compose setup, you can use the following steps:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1.  **Navigate to the service directory:**
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+    ```bash
+    cd wrapper-frontend
+    ```
+
+2.  **Build the Docker image (if not already built by `docker-compose up`):**
+
+    ```bash
+    docker build -t wrapper-frontend .
+    ```
+
+3.  **Run the Docker container:**
+
+    ```bash
+    docker run -d -p 5173:5173 -v $(pwd):/usr/src/app/frontend -e CHOKIDAR_USEPOLLING="true" -e ROLLUP_NO_BINARY_BUILD="true" --name wrapper-frontend-standalone wrapper-frontend
+    ```
+
+## Accessing the Service
+
+Once the service is running, you can access the frontend application at `http://localhost:5173`.

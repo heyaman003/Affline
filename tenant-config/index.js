@@ -12,13 +12,13 @@ app.use(bodyParser.json());
 const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
 const DATA_FILE = path.join(__dirname, 'data', 'tenants.json');
 
-// Ensure upload folder exists
+//  step -1 ensuring public folder exist or not 
 fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
-// Serve static files
+// Serving  static files 
 app.use('/uploads', express.static(UPLOADS_DIR));
 
-// Multer config
+// confugiation  for the multer for handling files
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
   filename: (req, file, cb) => {
@@ -28,14 +28,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Upload route
+// Upload route is here 
 app.post('/api/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   const fileUrl = `http://localhost:4000/uploads/${req.file.filename}`;
   res.json({ url: fileUrl });
 });
 
-// Other tenant routes (same as before)...
+// Other tenant routes
 function readTenants() {
   return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 }
@@ -49,12 +49,14 @@ app.get('/api/tenant/:id', (req, res) => {
   if (!config) return res.status(404).json({ error: 'Tenant not found' });
   res.json(config);
 });
+
 app.post('/api/tenant/:id', (req, res) => {
   const tenants = readTenants();
   tenants[req.params.id] = req.body;
   writeTenants(tenants);
   res.json({ message: 'Tenant saved', tenant: tenants[req.params.id] });
 });
+
 app.delete('/api/tenant/:id', (req, res) => {
   const tenants = readTenants();
   if (!tenants[req.params.id]) return res.status(404).json({ error: 'Tenant not found' });
