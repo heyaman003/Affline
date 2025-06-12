@@ -1,0 +1,35 @@
+{
+  "1234": {
+    "logo": "http://localhost:4000/uploads/1749714764870-Screenshot 2025-06-07 at 12.18.21â¯PM.png",
+    "primaryColor": "",
+    "chatwootInboxKey": "7KqCEKe8RjDfYJBrEctQsEkP",
+    "chatwootBaseUrl": "http://0.0.0.0:3000"
+  },
+  "acme": {
+    "name": "ACME-Corp",
+    "logoUrl": "/assets/logo1.jpg",
+    "primaryColor": "#e74c3c",
+    "chatwootInboxKey": "7KqCEKe8RjDfYJBrEctQsEkR",
+    "chatwootBaseUrl": "http://0.0.0.0:3000"
+  },
+  "globex": {
+    "name": "Globex Inc",
+    "logoUrl": "/assets/logo2.png",
+    "primaryColor": "#3498db",
+    "chatwootInboxKey": "7KqCEKe8RjDfYJBrEctQsEkP",
+    "chatwootBaseUrl": "http://0.0.0.0:3000"
+  },
+  "demo": {
+    "name": "Aman",
+    "primaryColor": "#0057ff",
+    "logo": "https://example.com/logo.png",
+    "chatwootInboxKey": "7KqCEKe8RjDfYJBrEctQsEkP",
+    "chatwootBaseUrl": "http://0.0.0.0:3000"
+  },
+  "rishi": {
+    "logo": "http://localhost:4000/uploads/1749731206886-Screenshot 2025-05-16 at 4.53.01â¯PM.png",
+    "primaryColor": "",
+    "chatwootInboxKey": "7KqCEKe8RjDfYJBrEctQsEkP",
+    "chatwootBaseUrl": "http://0.0.0.0:3000"
+  }
+}
