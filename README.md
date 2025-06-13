@@ -102,4 +102,8 @@ For instructions on how to deploy each major service (Affine, Chatwoot, Tenant C
 -   `./affine/README.md`
 -   `./chatwoot/README.md`
 -   `./tenant-config/README.md`
--   `./wrapper-frontend/README.md` 
+-   `./wrapper-frontend/README.md`
+
+## navigation 
+- open ```bash localhost:5713/ for choosing your org```
+- open ```bash localhost:5713/admin/ for admin view for creating , updating,deleting ```
