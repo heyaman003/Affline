@@ -107,3 +107,5 @@ For instructions on how to deploy each major service (Affine, Chatwoot, Tenant C
 ## navigation 
 - open ``` localhost:5713/ for choosing your org```
 - open ``` localhost:5713/admin/ for admin view for creating , updating,deleting ```
+
+### before setting teenat please set up you secret key and org in chatboot ui 
